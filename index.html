@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кінозал</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden; /* Зробить так, щоб метелики не виходили за межі екрану */
+        }
+        #video-container {
+            margin-top: 20px;
+        }
+        iframe {
+            width: 80%;
+            height: 500px;
+            max-width: 900px;
+            border: none;
+        }
+        .error {
+            color: red;
+            font-size: 20px;
+        }
+
+        /* Стилі для метеликів */
+        .butterfly {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/jpeg;base64,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');
+            background-size: cover;
+            opacity: 0.8;
+            animation: fly 10s infinite ease-in-out;
+        }
+
+        /* Анімація для метеликів */
+        @keyframes fly {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(200px, 50px);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(400px, 100px);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(200px, 150px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(0, 200px);
+                opacity: 1;
+            }
+        }
+      
+      
+      
+    </style>
+</head>
+<body>
+
+    <h1>Кінозал</h1>
+    <div id="video-container">
+        <p class="error" id="error-message" style="display:none;">Помилка: некоректне посилання на відео!</p>
+        <iframe id="videoFrame" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function getParameterByName(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        let videoUrl = getParameterByName('video');
+        const iframe = document.getElementById('videoFrame');
+        const errorMessage = document.getElementById('error-message');
+
+        if (videoUrl) {
+            // Автоматично додаємо HTTPS, якщо не вказано
+            if (!videoUrl.startsWith("http")) {
+                videoUrl = "https://" + videoUrl;
+            }
+
+            // Формуємо іфрейм із переданого посилання
+            iframe.src = videoUrl;
+        } else {
+            iframe.style.display = "none";
+            errorMessage.style.display = "block";
+        }
+    </script>
+
+    <!-- Метелики -->
+    <div class="butterfly" style="top: 50px; left: 100px;"></div>
+    <div class="butterfly" style="top: 50px; left: 20px;"></div>
+    <div class="butterfly" style="top: 50px; right: 300px;"></div>
+    <div class="butterfly" style="top: 150px; right: 400px;"></div>
+  
+  <div class="butterfly" style="top: 100px; left: 10px;"></div>
+    <div class="butterfly" style="top: 10px; left: 80px;"></div>
+    <div class="butterfly" style="top: 20px; right: 200px;"></div>
+    <div class="butterfly" style="top: 150px; right: 400px;"></div>
+
+  
+  
+</body>
+</html>
+
