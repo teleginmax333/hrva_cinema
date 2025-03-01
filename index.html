@@ -1,18 +1,26 @@
-﻿<!DOCTYPE html>
-<html lang="uk">
+<!DOCTYPE html>
+<html class="no-js" lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кінозал</title>
+    <title>Херсонська районна військова адміністрація, Херсонська область</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: dark blue;
+            background-color: #24456b;
             color: white;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Зробить так,  щоб метелики не виходили за межі  екрану */
+            overflow-y: auto;
+            min-height: 100vh;
+            position: relative;
+        }
+        header {
+            background-color: #1a2a40;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
         }
         #video-container {
             margin-top: 20px;
@@ -27,53 +35,52 @@
             color: red;
             font-size: 20px;
         }
-
-        /* Стилі для метеликів */
         .butterfly {
             position: absolute;
             width: 50px;
             height: 50px;
-            background-image: url('https://cdn.broshka.com.ua/items/PZ5UTosO6lUUm6RFPLeh2VtuzApEOHS1oQZnUREa.jpg');
-            background-size: cover;
+            background-image: url('метелик.png');
+            background-size: 80%;
+            background-repeat: no-repeat;
+            background-position: center;
             opacity: 0.8;
-            animation: fly 10s infinite ease-in-out;
         }
-
-        /* Анімація для метеликів */
-        @keyframes fly {
-            0% {
-                transform: translate(0, 0);
-                opacity: 1;
-            }
-            25% {
-                transform: translate(200px, 50px);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translate(400px, 100px);
-                opacity: 1;
-            }
-            75% {
-                transform: translate(200px, 150px);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translate(0, 200px);
-                opacity: 1;
-            }
+        .animation-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
         }
-      
-      
-      
     </style>
 </head>
 <body>
 
-    <h1>Кінозал</h1>
-    <div id="video-container">
-        <p class="error" id="error-message" style="display:none;">Помилка: некоректне посилання на відео!</p>
-        <iframe id="videoFrame" allowfullscreen></iframe>
+    <img src="https://khersonrda.gov.ua/wp-content/uploads/2025/02/cropped-hrdva-2.jpg" width="1500" height="312" 
+         alt="Офіційний сайт Херсонської районної державної (військової) адміністрації" class="new-site-image" 
+         srcset="https://khersonrda.gov.ua/wp-content/uploads/2025/02/cropped-hrdva-2.jpg 1500w, 
+                 https://khersonrda.gov.ua/wp-content/uploads/2025/02/cropped-hrdva-2-300x62.jpg 300w, 
+                 https://khersonrda.gov.ua/wp-content/uploads/2025/02/cropped-hrdva-2-1024x213.jpg 1024w, 
+                 https://khersonrda.gov.ua/wp-content/uploads/2025/02/cropped-hrdva-2-768x160.jpg 768w" 
+         sizes="(max-width: 1500px) 100vw, 1500px" decoding="async" fetchpriority="high" />  
+
+    <div class="hu-pad group">
+        <article class="group post-50076 page type-page status-publish hentry">
+            <div class="entry themeform">
+                <h1>Кінозал</h1>
+                <div id="video-container">
+                    <p class="error" id="error-message" style="display:none;">Помилка: некоректне посилання на відео!</p>
+                    <iframe id="videoFrame" allowfullscreen></iframe>
+                </div>
+            </div>
+        </article>
     </div>
+
+    <button class="animation-button" onclick="toggleButterflies()">Анімація</button>
 
     <script>
         function getParameterByName(name) {
@@ -97,21 +104,57 @@
             iframe.style.display = "none";
             errorMessage.style.display = "block";
         }
+
+        let butterflies = [];
+        let animationActive = false;
+
+        function createButterflies(num) {
+            for (let i = 0; i < num; i++) {
+                let butterfly = document.createElement("div");
+                butterfly.classList.add("butterfly");
+                document.body.appendChild(butterfly);
+                butterflies.push(butterfly);
+            }
+        }
+
+        function toggleButterflies() {
+            animationActive = !animationActive;
+            butterflies.forEach(butterfly => {
+                butterfly.style.display = animationActive ? 'block' : 'none';
+                if (animationActive) animateButterfly(butterfly);
+            });
+        }
+
+        function animateButterfly(butterfly) {
+            function move() {
+                if (!animationActive) return;
+
+                const iframeRect = document.getElementById('videoFrame').getBoundingClientRect();
+                const iframeTop = iframeRect.top; // Верх іфрейму
+                const iframeBottom = iframeRect.bottom; // Низ іфрейму
+                const iframeHeight = iframeRect.height; // Висота іфрейму
+
+                const topLimit = iframeTop - 1000;  // Обмеження для метеликів, щоб вони могли літати над іфреймом
+                const bottomLimit = iframeBottom + 5; // Низ іфрейму, куди метелики можуть спуститись
+
+                // Генерація випадкових координат для метелика
+                let x = Math.random() * window.innerWidth; // Випадкова координата по осі X
+                let y = Math.random() * (bottomLimit - topLimit) + topLimit; // Випадкова координата по осі Y в межах над і під іфреймом
+
+                let speed = Math.random() * 5 + 2; // Випадкова швидкість анімації
+                butterfly.style.transition = `transform ${speed}s linear`; // Створення анімації по трансформації
+                butterfly.style.transform = `translate(${x}px, ${y}px)`; // Зміщення метелика
+
+                // Повторний виклик через певний час
+                setTimeout(move, speed * 1000);
+            }
+            move();
+        }
+
+        createButterflies(50); // Створюємо 24 метелики
     </script>
 
-    <!-- Метелики -->
-    <div class="butterfly" style="top: 50px; left: 100px;"></div>
-    <div class="butterfly" style="top: 50px; left: 20px;"></div>
-    <div class="butterfly" style="top: 50px; right: 300px;"></div>
-    <div class="butterfly" style="top: 150px; right: 400px;"></div>
-  
-  <div class="butterfly" style="top: 100px; left: 10px;"></div>
-    <div class="butterfly" style="top: 10px; left: 80px;"></div>
-    <div class="butterfly" style="top: 20px; right: 200px;"></div>
-    <div class="butterfly" style="top: 150px; right: 400px;"></div>
-
-  
-  
 </body>
 </html>
+
 
